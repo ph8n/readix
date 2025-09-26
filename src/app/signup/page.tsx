@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Mail, Lock, Eye, EyeOff } from "lucide-react"
-import { login } from "./actions"
+import { BookOpen, Mail, Lock, User, Eye, EyeOff } from "lucide-react"
+import { signup } from "./actions"
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -30,9 +30,9 @@ export default function LoginPage() {
     setError("")
 
     try {
-      await login(formData)
+      await signup(formData)
     } catch {
-      setError("Invalid email or password. Please try again.")
+      setError("Failed to create account. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -53,19 +53,19 @@ export default function LoginPage() {
           <div className="space-y-2">
             <p className="text-xl font-serif text-muted-foreground italic text-balance">Read. Reflect. Remember.</p>
             <p className="text-sm text-muted-foreground text-pretty">
-              Your intelligent reading companion
+              Your intelligent PDF companion with AI-powered insights
             </p>
           </div>
         </div>
 
-        {/* Login Card */}
+        {/* Signup Card */}
         <Card className="border-border/50 shadow-sm bg-card/80 backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-6">
             <CardTitle className="text-2xl font-serif text-center">
-              Welcome back
+              Create account
             </CardTitle>
             <CardDescription className="text-center text-muted-foreground">
-              Sign in to continue your reading journey
+              A better way to read
             </CardDescription>
           </CardHeader>
 
@@ -76,6 +76,23 @@ export default function LoginPage() {
                   {error}
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium text-foreground">
+                  Full name
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="pl-10 border-border/60 focus:border-accent focus:ring-accent/20 bg-input/50"
+                    required
+                  />
+                </div>
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
@@ -118,15 +135,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Forgot password?
-                </button>
-              </div>
-
               <Button
                 type="submit"
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground border border-border/20 shadow-sm transition-all duration-200 hover:shadow-md"
@@ -135,10 +143,10 @@ export default function LoginPage() {
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                    <span>Signing in...</span>
+                    <span>Creating account...</span>
                   </div>
                 ) : (
-                  "Sign in"
+                  "Create account"
                 )}
               </Button>
             </form>
@@ -180,10 +188,10 @@ export default function LoginPage() {
 
             <div className="text-center">
               <Link
-                href="/signup"
+                href="/login"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                New to Readix? <span className="font-medium">Sign up</span>
+                Already have an account? <span className="font-medium">Sign in</span>
               </Link>
             </div>
           </CardContent>
