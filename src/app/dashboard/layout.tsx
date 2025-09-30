@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { BookOpen, FileText, Search, Star, BarChart3, Settings, LogOut } from 'lucide-react'
+import { BookOpen, FileText, Settings, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -25,28 +25,7 @@ async function DashboardSidebar({ user }: { user: { email?: string } }) {
             <span>Documents</span>
           </Button>
         </Link>
-        
-        <Link href="/dashboard/search">
-          <Button variant="ghost" className="w-full justify-start space-x-3 text-left">
-            <Search className="h-4 w-4" />
-            <span>Search</span>
-          </Button>
-        </Link>
-        
-        <Link href="/dashboard/favorites">
-          <Button variant="ghost" className="w-full justify-start space-x-3 text-left">
-            <Star className="h-4 w-4" />
-            <span>Favorites</span>
-          </Button>
-        </Link>
-        
-        <Link href="/dashboard/analytics">
-          <Button variant="ghost" className="w-full justify-start space-x-3 text-left">
-            <BarChart3 className="h-4 w-4" />
-            <span>Analytics</span>
-          </Button>
-        </Link>
-        
+
         <Link href="/dashboard/settings">
           <Button variant="ghost" className="w-full justify-start space-x-3 text-left">
             <Settings className="h-4 w-4" />
@@ -61,7 +40,7 @@ async function DashboardSidebar({ user }: { user: { email?: string } }) {
           <p className="text-sm font-medium text-foreground">{user.email}</p>
           <p className="text-xs text-muted-foreground">Reader</p>
         </div>
-        
+
         <form action="/auth/signout" method="post">
           <Button variant="ghost" type="submit" className="w-full justify-start space-x-3 text-left text-red-600 hover:bg-red-50 hover:text-red-700">
             <LogOut className="h-4 w-4" />

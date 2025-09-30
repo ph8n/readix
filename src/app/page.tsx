@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button"
+import Link from 'next/link';
 
 export default function HomePage() {
-  // TODO: Add authentication state logic
-  // When user is logged in, auto-redirect to library/dashboard
-  // For now, showing logged-out state
 
   return (
     <main className="min-h-screen paper-texture flex flex-col">
@@ -33,13 +31,15 @@ export default function HomePage() {
 
           {/* CTA Button - Ghost style with soft hover */}
           <div className="pt-8">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="font-sans text-lg px-12 py-6 border border-border hover:bg-accent hover:text-accent-foreground transition-all duration-300 rounded-lg shadow-sm hover:shadow-md"
-            >
-              Enter Library
-            </Button>
+            <Link href="/dashboard" passHref>
+              <Button
+                variant="ghost"
+                size="lg"
+                className="font-sans text-lg px-12 py-6 border border-border hover:bg-accent hover:text-accent-foreground transition-all duration-300 rounded-lg shadow-sm hover:shadow-md"
+              >
+                Enter Library
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -50,4 +50,3 @@ export default function HomePage() {
     </main>
   )
 }
-

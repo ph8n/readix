@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Readix - PDF Reader with AI Chat
 
-## Getting Started
+A modern, zen-inspired PDF reader application with integrated AI chat capabilities for contextual document interaction.
 
-First, run the development server:
+## 🎯 Project Vision
+**"Read. Reflect. Remember."** - A seamless PDF reading experience with AI-powered insights using Retrieval Augmented Generation (RAG).
+
+## 🚀 Current Project Status (December 2024)
+
+### ✅ **FOUNDATION COMPLETE**
+- **Document Management**: Upload (50MB), library, real-time updates with Supabase
+- **Authentication**: Complete user isolation with Row Level Security
+- **UI Framework**: shadcn/ui components with zen aesthetic (#FEFEFE, #E8F0E3, #2C2C2C)
+- **Component Architecture**: Modular PDF reader components extracted and tested
+- **Navigation**: Working flow from document library to reading interface
+
+### 🔄 **CURRENT PHASE: Reading Interface Integration**
+**Status**: Foundation components built, ready for integration
+- All sidebar components (DocumentInfo, ProgressPanel, PageNavigation, QuickActions) ✅
+- Shared TypeScript interfaces for clean development ✅  
+- Basic routing `/dashboard/read/[id]` working ✅
+- **Next**: Combine components into complete reading interface
+
+### 📅 **UPCOMING PHASES**
+1. **PDF Rendering**: react-pdf integration for actual document display
+2. **AI Integration**: OpenRouter API + RAG pipeline for contextual chat
+3. **Enhanced Features**: Search, bookmarks, collaboration
+
+## 🛠 Tech Stack
+- **Frontend**: Next.js 15 + React 19 + TypeScript + Tailwind CSS v4
+- **Backend**: Supabase (database/storage/auth) + tRPC  
+- **UI**: shadcn/ui with zen aesthetic design
+- **PDF**: react-pdf + pdfjs-dist
+- **AI**: OpenRouter API (planned) with RAG capabilities
+
+## 🏃‍♂️ Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server  
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── dashboard/
+│   │   ├── documents/          # Document library
+│   │   └── read/[id]/          # PDF reading interface  
+│   └── actions/                # Server actions
+├── components/
+│   ├── reader/                 # PDF reader components
+│   │   ├── sidebar/            # Modular sidebar panels
+│   │   └── types.ts            # Shared interfaces
+│   └── ui/                     # shadcn/ui components
+└── utils/supabase/             # Database integration
+```
 
-## Learn More
+## 🎨 Design Philosophy
 
-To learn more about Next.js, take a look at the following resources:
+**Zen/Japanese-Inspired Minimalism**
+- Warm color palette with generous whitespace
+- Progressive disclosure - show only what's needed  
+- Gentle transitions and contextual actions
+- Focus on reading experience over feature complexity
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Commands
+- `npm run dev` - Development server with Turbopack
+- `npm run build` - Production build
+- `npm run lint` - ESLint checking
 
-## Deploy on Vercel
+### Key Features Implemented
+- ✅ PDF upload up to 50MB (Supabase free tier)
+- ✅ Real-time document synchronization
+- ✅ User authentication and document isolation
+- ✅ Responsive zen aesthetic UI
+- ✅ Modular component architecture
+- 🔄 Reading interface integration (in progress)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📚 Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`GOALS.md`](./GOALS.md) - Detailed project roadmap and progress
+- [`DESIGN_PLAN.md`](./DESIGN_PLAN.md) - UI/UX design decisions and implementation status
+
+## 🌟 Vision
+
+Building towards a complete PDF reading experience with:
+- Immersive document reading with progress tracking
+- AI-powered contextual chat for document understanding  
+- Clean, distraction-free interface inspired by Japanese minimalism
+- Seamless integration of reading and AI interaction

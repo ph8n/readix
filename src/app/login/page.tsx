@@ -27,15 +27,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true)
-    setError("")
-
-    try {
-      await login(formData)
-    } catch {
-      setError("Invalid email or password. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
+    await login(formData)
   }
 
   return (

@@ -27,15 +27,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true)
-    setError("")
-
-    try {
-      await signup(formData)
-    } catch {
-      setError("Failed to create account. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
+    await signup(formData)
   }
 
   return (
@@ -53,7 +45,7 @@ export default function SignupPage() {
           <div className="space-y-2">
             <p className="text-xl font-serif text-muted-foreground italic text-balance">Read. Reflect. Remember.</p>
             <p className="text-sm text-muted-foreground text-pretty">
-              Your intelligent PDF companion with AI-powered insights
+              Your intelligent reading companion
             </p>
           </div>
         </div>
