@@ -2,9 +2,13 @@ import { Progress } from "@/components/ui/progress"
 
 import { ProgressPanelProps } from "../types"
 
-export function ProgressPanel({ document, currentPage }: ProgressPanelProps) {
-  const progressPercentage = Math.round((currentPage / document.pageCount) * 100)
-  const estimatedTimeRemaining = Math.ceil(((document.pageCount - currentPage) / document.pageCount) * 15)
+export function ProgressPanel({ currentPage, totalPages, progress }: ProgressPanelProps) {
+  const progressPercentage = Math.round(progress)
+  
+  const pagesRemaining = Math.max(0, totalPages - currentPage)
+  const estimatedTimeRemaining = totalPages > 0 && pagesRemaining > 0
+    ? Math.ceil(pagesRemaining * 1.5)
+    : 0
 
   return (
     <div>

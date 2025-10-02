@@ -16,7 +16,7 @@
 ## Technical Goals
 
 - **Stack**: Next.js 15, TypeScript, Supabase, Tailwind CSS, shadcn/ui, React PDF
-- **AI Integration**: OpenRouter API for chat functionality (simpler than self-hosted)
+- **AI Integration**: Google Gemini 2.0 Flash + LangChain for RAG-powered chat
 - **Scalability**: Monolithic, TypeScript-based architecture for rapid iteration
 - **Performance**: Turbopack for fast development, optimistic UI updates
 - **Security**: Complete user isolation with RLS policies, secure file storage
@@ -32,7 +32,7 @@
 ## DevOps \& Deployment
 
 - Deploy frontend to Vercel
-- Use OpenRouter API for AI inference (no infrastructure needed)
+- Use Google Gemini API for AI inference (free tier: 1M tokens/month)
 - Supabase Cloud for database, storage, and authentication
 - Automate CI/CD with GitHub Actions
 
@@ -268,10 +268,27 @@ src/components/ui/
 - Mobile responsive optimization
 
 ### **📅 PHASE 3: AI INTEGRATION (FUTURE)**
-- OpenRouter API setup and configuration
-- PDF text extraction using pdfjs-dist
-- RAG pipeline for contextual responses
-- Chat interface integration with reading experience
+
+#### **Phase 3A: Simple Context Chat (MVP - Week 3)**
+- Google Gemini API setup with LangChain
+- PDF text extraction using pdfjs-dist (already installed)
+- Simple chat: Pass full PDF text in context (works for PDFs up to ~500 pages)
+- Basic chat interface integrated with reading experience
+- **Time**: 1-2 days | **Cost**: Free tier (1M tokens/month)
+
+#### **Phase 3B: Advanced RAG (Optional - Week 4+)**
+- Document chunking and embeddings generation
+- Supabase pgvector setup for vector storage
+- Semantic search with LangChain retrieval chains
+- Multi-document chat support
+- **Time**: 3-4 days | **Cost**: ~$5-15/month (after free tier)
+
+**Why Gemini + LangChain:**
+- ✅ **Cost**: 10-20x cheaper than OpenRouter (free tier very generous)
+- ✅ **Context**: 1M token window perfect for entire PDFs
+- ✅ **Architecture**: LangChain provides RAG abstractions and flexibility
+- ✅ **Integration**: Native Supabase pgvector support via LangChain
+- ✅ **Future-proof**: Easy to switch models with LangChain abstraction layer
 
 ## Short-Term Plans (Updated - December 2024)
 
@@ -292,3 +309,390 @@ src/components/ui/
 - Launch to wider audience and iterate features
 - Mobile app (if demand exists)
 - Monetization via premium AI features or scale plans
+
+---
+
+## 📘 CODING CONVENTIONS & STYLE GUIDE
+
+> **For AI Agents**: Follow these conventions when generating or modifying code
+
+### **Naming Conventions**
+
+#### **Files & Folders**
+- **Pages (default exports)**: `PascalCase` + descriptive suffix
+  - ✅ `LoginPage.tsx`, `DocumentsPage.tsx`, `ReadPage.tsx`
+  - ✅ `DashboardLayout.tsx`
+- **Components**: `PascalCase.tsx`
+  - ✅ `UploadDialog.tsx`, `DocumentInfo.tsx`, `ReadingSidebar.tsx`
+- **Utilities/Libs**: `kebab-case.ts`
+  - ✅ `document-utils.ts`, `env.ts`, `utils.ts`
+- **Actions**: `kebab-case.ts` or descriptive names
+  - ✅ `upload-document.ts`, `reading-actions.ts`
+- **Hooks**: `camelCase.ts` starting with `use`
+  - ✅ `useDocuments.ts`, `useReadingProgress.ts`
+
+#### **Variables & Functions**
+- **Functions**: `camelCase`
+  - ✅ `formatFileSize()`, `transformDocumentForReader()`, `getDocumentUrl()`
+- **Server Actions**: `camelCase` (async)
+  - ✅ `export async function uploadDocument()`
+  - ✅ `export async function getDocumentForReading()`
+- **Components**: `PascalCase`
+  - ✅ `function Button()`, `function DocumentInfo()`
+  - ✅ `export default function LoginPage()`
+- **Constants**: `SCREAMING_SNAKE_CASE`
+  - ✅ `MAX_FILE_SIZE`, `SUPABASE_URL`, `AVG_READING_TIME_PER_PAGE`
+- **Variables**: `camelCase`
+  - ✅ `const documentId`, `const currentPage`, `const isCollapsed`
+
+#### **Types & Interfaces**
+- **Interfaces**: `PascalCase`
+  - ✅ `interface DocumentData`, `interface ReadingSidebarProps`
+- **Types**: `PascalCase`
+  - ✅ `type Document`, `type UploadState`
+- **Enums**: `PascalCase` for name, `SCREAMING_SNAKE_CASE` for values
+  - ✅ `enum Status { PENDING = 'PENDING', SUCCESS = 'SUCCESS' }`
+
+### **Code Organization**
+
+#### **Import Order**
+```typescript
+// 1. React/Next.js core
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+// 2. Third-party libraries
+import { createClient } from '@supabase/ssr'
+
+// 3. Internal components
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+
+// 4. Internal utilities/hooks
+import { formatFileSize } from '@/lib/document-utils'
+import { useDocuments } from '@/hooks/useDocuments'
+
+// 5. Actions
+import { uploadDocument } from '@/app/actions/upload-document'
+
+// 6. Types (use type imports)
+import type { Document } from '@/hooks/useDocuments'
+import type { DocumentData } from '@/components/reader/types'
+
+// 7. Icons (Lucide React)
+import { Upload, FileText, Download } from 'lucide-react'
+```
+
+#### **File Structure**
+```typescript
+// 1. "use client" or "use server" directive (if needed)
+"use client"
+
+// 2. Imports (organized as above)
+
+// 3. Types/Interfaces (local to file)
+interface ComponentProps {
+  // ...
+}
+
+// 4. Constants (local to file)
+const MAX_ITEMS = 10
+
+// 5. Helper functions (before component)
+function helperFunction() {
+  // ...
+}
+
+// 6. Main component/function
+export default function Component() {
+  // ...
+}
+
+// 7. Additional exports (if any)
+export { helperFunction }
+```
+
+### **TypeScript Conventions**
+
+#### **Type Safety**
+- ✅ **DO**: Use explicit types for function parameters and returns
+  ```typescript
+  export async function getDocument(id: string): Promise<Document | null>
+  ```
+- ✅ **DO**: Use type imports for types
+  ```typescript
+  import type { Document } from '@/hooks/useDocuments'
+  ```
+- ❌ **DON'T**: Use `any` type
+- ❌ **DON'T**: Use non-null assertions (`!`) without validation
+  - Exception: After validation in `src/lib/env.ts`
+
+#### **Interfaces vs Types**
+- **Interfaces**: For component props, object shapes
+  ```typescript
+  interface ButtonProps {
+    variant?: 'default' | 'outline'
+    size?: 'sm' | 'md' | 'lg'
+  }
+  ```
+- **Types**: For unions, intersections, utility types
+  ```typescript
+  type Status = 'idle' | 'loading' | 'success' | 'error'
+  type Document = DatabaseDocument & { computed: string }
+  ```
+
+### **React/Next.js Patterns**
+
+#### **Components**
+- **Server Components** (default): No "use client" directive
+  ```typescript
+  export default async function ServerPage() {
+    const data = await fetchData()
+    return <div>{data}</div>
+  }
+  ```
+- **Client Components**: Add "use client" at top
+  ```typescript
+  "use client"
+  
+  export default function ClientComponent() {
+    const [state, setState] = useState()
+    return <div>{state}</div>
+  }
+  ```
+
+#### **Server Actions**
+- Always mark with "use server" or in separate file
+- Use async/await
+- Include proper error handling
+  ```typescript
+  'use server'
+  
+  export async function serverAction(formData: FormData) {
+    try {
+      // Authenticate
+      // Validate
+      // Execute
+      return { success: true, data }
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+  ```
+
+#### **Hooks**
+- Custom hooks start with `use`
+- Return object with named properties
+  ```typescript
+  export function useDocuments() {
+    const [documents, setDocuments] = useState([])
+    
+    return {
+      documents,
+      loading,
+      error,
+      refetch
+    }
+  }
+  ```
+
+### **Styling Conventions**
+
+#### **Tailwind CSS**
+- Use utility classes, avoid custom CSS unless necessary
+- Follow mobile-first responsive design
+  ```typescript
+  className="p-4 md:p-6 lg:p-8"
+  ```
+- Use `cn()` helper for conditional classes
+  ```typescript
+  import { cn } from '@/lib/utils'
+  
+  className={cn(
+    "base-classes",
+    isActive && "active-classes",
+    variant === 'primary' && "primary-classes"
+  )}
+  ```
+
+#### **Color Palette (Zen Aesthetic)**
+- **Background**: `#FEFEFE` (warm white)
+- **Foreground**: `#2C2C2C` (charcoal)
+- **Accent**: `#E8F0E3` (sage green)
+- **Muted**: `#F5F5F5` (light gray)
+- **Border**: `#E5E7EB`
+
+Use semantic color names:
+```typescript
+className="bg-background text-foreground border-border"
+className="bg-accent text-accent-foreground"
+```
+
+#### **Typography**
+- **Headings**: `font-serif` (Playfair Display)
+- **Body**: `font-sans` (Inter)
+  ```typescript
+  <h1 className="font-serif text-2xl font-bold">Title</h1>
+  <p className="font-sans text-base">Body text</p>
+  ```
+
+### **Database Conventions**
+
+#### **Field Naming**
+- **Database**: `snake_case`
+  - ✅ `user_id`, `file_path`, `upload_date`, `page_count`
+- **TypeScript**: `camelCase`
+  - ✅ `userId`, `filePath`, `uploadDate`, `pageCount`
+
+#### **Transformations**
+Always transform database fields to TypeScript conventions:
+```typescript
+// Database Document
+{
+  id: string
+  user_id: string
+  file_path: string
+  page_count: number
+  upload_date: string
+}
+
+// TypeScript Document (after transformation)
+{
+  id: string
+  userId: string
+  filePath: string
+  pageCount: number
+  uploadDate: Date
+}
+```
+
+Use `transformDocumentForReader()` from `@/lib/document-utils` for reader components.
+
+### **Error Handling**
+
+#### **Pattern**
+```typescript
+try {
+  // Attempt operation
+  const result = await operation()
+  return { success: true, data: result }
+} catch (error) {
+  console.error('Operation failed:', error)
+  
+  // User-friendly error message
+  const message = error instanceof Error 
+    ? error.message 
+    : 'An unexpected error occurred'
+  
+  return { success: false, error: message }
+}
+```
+
+#### **Error Messages**
+- ✅ User-friendly, actionable
+- ✅ No stack traces or technical jargon
+- ✅ Suggest next steps when possible
+
+```typescript
+// Good
+"File size must be less than 50MB"
+"Please check your email to confirm your account"
+
+// Bad
+"ERR_FILE_TOO_LARGE"
+"Authentication failed with status 401"
+```
+
+### **Comments & Documentation**
+
+#### **When to Comment**
+- ✅ Complex business logic
+- ✅ Non-obvious workarounds
+- ✅ TODO items with context
+- ❌ Obvious code (let the code speak)
+
+```typescript
+// ✅ Good comment
+// Calculate reading time assuming 60 seconds per page
+const estimatedTime = (totalPages - currentPage) * 60
+
+// ❌ Bad comment (obvious)
+// Set the page to 1
+setPage(1)
+
+// ✅ Good TODO
+// TODO: Add rate limiting (max 10 uploads/hour) - Issue #10
+```
+
+#### **Function Documentation**
+For complex functions, use JSDoc:
+```typescript
+/**
+ * Transforms database document to reader-compatible format
+ * @param dbDoc - Document from Supabase database
+ * @returns DocumentData with camelCase fields and formatted values
+ */
+export function transformDocumentForReader(dbDoc: Document): DocumentData {
+  // ...
+}
+```
+
+### **Testing Conventions** (When Implemented)
+
+- Test files: `ComponentName.test.tsx`
+- Test descriptions: Describe user behavior
+  ```typescript
+  describe('UploadDialog', () => {
+    it('shows error when file exceeds 50MB', () => {
+      // ...
+    })
+  })
+  ```
+
+### **Git Commit Messages**
+
+Follow conventional commits:
+```
+feat: add reading progress tracking
+fix: resolve type mismatch in reader components
+docs: update coding conventions in GOALS.md
+refactor: extract formatFileSize to shared utility
+chore: update dependencies
+```
+
+### **Environment Variables**
+
+- Prefix public vars: `NEXT_PUBLIC_*`
+- Validate all env vars in `src/lib/env.ts`
+- Never commit `.env.local` (use `.env.example`)
+
+### **Performance Best Practices**
+
+- Use Server Components by default
+- Add "use client" only when needed (useState, useEffect, etc.)
+- Lazy load heavy components
+- Optimize images with Next.js Image component
+- Use React.memo() for expensive renders (sparingly)
+
+### **Security Best Practices**
+
+- Never log sensitive data
+- Validate all user inputs
+- Use RLS (Row Level Security) for database access
+- Sanitize file uploads
+- Use environment variables for secrets
+- Implement rate limiting on server actions
+
+---
+
+## 🔗 Related Documentation
+
+- **ACTION_PLAN.md** - Current sprint and task tracking
+- **PROGRESS_LOG.md** - Daily development log
+- **ISSUES.md** - Bug tracking and technical debt
+- **DESIGN_PLAN.md** - UI/UX guidelines and zen aesthetic
+- **AGENTS.md** - AI agent guidelines (being deprecated/merged)
+
+---
+
+**Conventions Last Updated**: October 1, 2025

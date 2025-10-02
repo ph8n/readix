@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FileText, Upload, Plus, Trash2, Download } from 'lucide-react'
-import { useDocuments, formatFileSize, Document as DocumentType } from '@/hooks/useDocuments'
+import { useDocuments, Document as DocumentType } from '@/hooks/useDocuments'
+import { formatFileSize } from '@/lib/document-utils'
 import UploadDialog from '@/components/UploadDialog'
 import { deleteDocument, getDocumentUrl } from '@/app/actions/upload-document'
 
@@ -258,14 +259,20 @@ export default function DocumentsPage() {
         isOpen={uploadDialogOpen}
         onClose={() => setUploadDialogOpen(false)}
         onSuccess={(uploadedDocument?: DocumentType) => {
-          console.log('📤 Upload success callback triggered')
+          if (process.env.NODE_ENV === 'development') {
+            console.log('📤 Upload success callback triggered')
+          }
           // Fallback: Add document immediately if real-time doesn't work
           if (uploadedDocument) {
-            console.log('📄 Adding document via fallback:', uploadedDocument)
+            if (process.env.NODE_ENV === 'development') {
+              console.log('📄 Adding document via fallback:', uploadedDocument)
+            }
             optimisticAdd(uploadedDocument)
           } else {
             // If no document passed, refetch as backup
-            console.log('🔄 No document passed, refetching')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔄 No document passed, refetching')
+            }
             setTimeout(() => refetch(), 100)
           }
         }}

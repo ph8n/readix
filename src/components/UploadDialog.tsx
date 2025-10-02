@@ -4,8 +4,10 @@ import { useState, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Upload, X, FileText, AlertCircle, CheckCircle } from 'lucide-react'
-import { uploadDocument } from '@/app/actions/upload-document'
+import { recordDocumentMetadata } from '@/app/actions/upload-document'
+import { createClient } from '@/utils/supabase/client'
 import { Document as DocumentType } from '@/hooks/useDocuments'
+import { formatFileSize } from '@/lib/document-utils'
 
 interface UploadDialogProps {
   isOpen: boolean
@@ -71,10 +73,34 @@ export default function UploadDialog({ isOpen, onClose, onSuccess }: UploadDialo
     setUploadState(prev => ({ ...prev, status: 'uploading', progress: 0 }))
 
     try {
-      const formData = new FormData()
-      formData.append('file', uploadState.file)
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Authentication required')
 
-      const result = await uploadDocument(formData)
+      const file = uploadState.file
+      const arrayBuffer = await file.arrayBuffer()
+      const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer)
+      const hash = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('')
+
+      const timestamp = Date.now()
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+      const fileName = `${sanitizedName.split('.')[0]}-${timestamp}.pdf`
+      const filePath = `${user.id}/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file, { contentType: file.type })
+
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
+
+      const result = await recordDocumentMetadata({
+        title: file.name.replace('.pdf', ''),
+        file_name: file.name,
+        file_path: filePath,
+        file_size: file.size,
+        mime_type: file.type,
+        file_hash: hash
+      })
 
       if (result.success) {
         setUploadState(prev => ({ ...prev, status: 'success' }))
@@ -98,14 +124,6 @@ export default function UploadDialog({ isOpen, onClose, onSuccess }: UploadDialo
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
-  }
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
   if (!isOpen) return null

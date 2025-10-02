@@ -7,11 +7,12 @@
 
 ## Tech Stack
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS v4
-- **Backend**: tRPC, Supabase (database/storage/auth)
+- **Backend**: Supabase (database/storage/auth)
 - **UI Components**: shadcn/ui for branded, professional interface
-- **State Management**: Zustand
-- **AI/ML**: LangChain, self-hosted Llama 3.3 70B via vLLM
-- **PDF Handling**: React PDF for in-browser viewing
+- **State Management**: React hooks (useState, useEffect)
+- **AI/ML**: Google Gemini 2.0 Flash, LangChain for RAG pipeline
+- **Vector Store**: Supabase pgvector (Phase 3B - optional)
+- **PDF Handling**: React PDF for viewing, pdfjs-dist for text extraction
 
 ## Build/Lint/Test Commands
 - `npm run dev` - Start development server with Turbopack
@@ -47,10 +48,14 @@
 - Use Supabase client with TypeScript for type-safe database operations
 
 ### AI Integration
-- Use LangChain for RAG pipeline implementation
-- Structure prompts for PDF context and chat continuity
-- Handle vLLM server communication for inference
-- Implement context-aware chat with document retrieval
+- Use Google Gemini 2.0 Flash for chat (1M token context window)
+- Use LangChain for RAG pipeline and chain orchestration
+- Extract PDF text with pdfjs-dist before passing to AI
+- Start simple (context passing), scale to embeddings only if needed
+- Store conversation history in Supabase for context persistence
+- Implement streaming responses for better UX
+- Phase 3A: Simple context chat (MVP, free tier)
+- Phase 3B: Advanced RAG with pgvector (optional, for large PDFs)
 
 ### UI/UX Guidelines
 - Use shadcn/ui components for consistent, professional design

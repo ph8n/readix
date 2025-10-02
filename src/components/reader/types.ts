@@ -8,6 +8,7 @@ export interface DocumentData {
   uploadDate: string
   readingProgress: number
   currentPage: number
+  filePath: string
 }
 
 export interface ReadingActions {
@@ -30,25 +31,18 @@ export interface DocumentInfoProps {
 }
 
 export interface ProgressPanelProps {
-  document: DocumentData
   currentPage: number
+  totalPages: number
+  progress: number
 }
 
-export interface PageNavigationProps {
-  currentPage: number
-  pageCount: number
-  onPageChange: (page: number) => void
-}
 
-export interface QuickActionsProps {
-  document: DocumentData
-}
 
 export interface ReadingSidebarProps {
   document: DocumentData
   currentPage: number
-  onPageChange: (page: number) => void
   isCollapsed: boolean
+  onToggleCollapse: () => void
 }
 
 export interface PDFReaderProps {

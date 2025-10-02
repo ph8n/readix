@@ -27,6 +27,22 @@ export async function uploadDocument(formData: FormData) {
     throw new Error('File size must be less than 50MB')
   }
 
+  // Validate actual PDF content (magic number check)
+  const arrayBuffer = await file.arrayBuffer()
+  const header = new Uint8Array(arrayBuffer.slice(0, 5))
+
+  // PDF magic number: %PDF- (0x25 0x50 0x44 0x46 0x2D)
+  const isPDF = 
+    header[0] === 0x25 && // %
+    header[1] === 0x50 && // P
+    header[2] === 0x44 && // D
+    header[3] === 0x46 && // F
+    header[4] === 0x2D    // -
+
+  if (!isPDF) {
+    throw new Error('Invalid PDF file format')
+  }
+
   // 3. Generate unique file path
   const timestamp = Date.now()
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
@@ -43,8 +59,7 @@ export async function uploadDocument(formData: FormData) {
       throw new Error(`Upload failed: ${uploadError.message}`)
     }
 
-    // 5. Calculate file hash for duplicate detection
-    const arrayBuffer = await file.arrayBuffer()
+    // 5. Calculate file hash for duplicate detection (reuse arrayBuffer)
     const hash = crypto.createHash('sha256').update(Buffer.from(arrayBuffer)).digest('hex')
 
     // 6. Prepare document metadata
@@ -92,7 +107,7 @@ export async function getDocumentUrl(filePath: string) {
 
   const { data, error } = await supabase.storage
     .from('documents')
-    .createSignedUrl(filePath, 3600) // 1 hour expiry
+    .createSignedUrl(filePath, 43200) // 12 hour expiry
 
   if (error) {
     throw new Error(`Failed to get document URL: ${error.message}`)
@@ -145,4 +160,42 @@ export async function deleteDocument(documentId: string) {
 
   // The real-time subscription will handle the update
   return { success: true }
+}
+
+// Lightweight server action for recording document metadata after client-side upload
+export async function recordDocumentMetadata(info: {
+  title: string
+  file_name: string
+  file_path: string
+  file_size: number
+  mime_type: string
+  file_hash?: string
+}) {
+  const supabase = await createClient()
+
+  // Authenticate user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    throw new Error('Authentication required')
+  }
+
+  // Prepare document metadata
+  const fileInfo = {
+    ...info,
+    user_id: user.id
+  }
+
+  // Insert record into documents table
+  const { data: docData, error: dbError } = await supabase
+    .from('documents')
+    .insert(fileInfo)
+    .select()
+    .single()
+
+  if (dbError) {
+    throw new Error(`Database error: ${dbError.message}`)
+  }
+
+  // Return success - real-time subscription will handle UI updates
+  return { success: true, document: docData }
 }
