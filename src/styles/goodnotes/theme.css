@@ -1,0 +1,78 @@
+/* GoodNotes Design Tokens & Theme Variables */
+
+:root {
+  /* GoodNotes Color Palette */
+  --gn-bg: #F8F9FA;
+  --gn-card: #FFFFFF;
+  --gn-border: #E5E5EA;
+  --gn-hover-bg: #E8F4FD;
+  --gn-hover-border: #007AFF;
+  --gn-selected-bg: rgba(0, 122, 255, 0.2);
+  --gn-selected-border: #007AFF;
+  --gn-text-primary: #1C1C1E;
+  --gn-text-secondary: #8E8E93;
+  --gn-accent: #007AFF;
+  --gn-icon: #8E8E93;
+  --gn-destructive: #FF3B30;
+  
+  /* Spacing */
+  --gn-spacing-xs: 4px;
+  --gn-spacing-sm: 8px;
+  --gn-spacing-md: 12px;
+  --gn-spacing-lg: 16px;
+  --gn-spacing-xl: 24px;
+  --gn-spacing-2xl: 32px;
+  
+  /* Border Radius */
+  --gn-radius-sm: 8px;
+  --gn-radius-md: 10px;
+  --gn-radius-lg: 12px;
+  --gn-radius-xl: 16px;
+  
+  /* Shadows */
+  --gn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --gn-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --gn-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --gn-shadow-selected: 0 4px 16px rgba(0, 122, 255, 0.2);
+  
+  /* Transitions */
+  --gn-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --gn-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --gn-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Typography */
+  --gn-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  --gn-font-size-xs: 11px;
+  --gn-font-size-sm: 12px;
+  --gn-font-size-base: 14px;
+  --gn-font-size-lg: 15px;
+  --gn-font-size-xl: 17px;
+  --gn-font-size-2xl: 20px;
+  
+  --gn-font-weight-normal: 400;
+  --gn-font-weight-medium: 500;
+  --gn-font-weight-semibold: 600;
+  --gn-font-weight-bold: 700;
+  
+  /* Z-index */
+  --gn-z-index-base: 1;
+  --gn-z-index-dropdown: 10;
+  --gn-z-index-sticky: 100;
+  --gn-z-index-modal: 1000;
+}
+
+/* Dark mode adjustments */
+.dark {
+  --gn-bg: #1C1C1E;
+  --gn-card: #2C2C2E;
+  --gn-border: #38383A;
+  --gn-hover-bg: rgba(0, 122, 255, 0.15);
+  --gn-hover-border: #0A84FF;
+  --gn-selected-bg: rgba(10, 132, 255, 0.25);
+  --gn-selected-border: #0A84FF;
+  --gn-text-primary: #FFFFFF;
+  --gn-text-secondary: #98989D;
+  --gn-accent: #0A84FF;
+  --gn-icon: #98989D;
+  --gn-destructive: #FF453A;
+}

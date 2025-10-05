@@ -10,6 +10,26 @@ export function formatFileSize(bytes: number): string {
 }
 
 export function transformDocumentForReader(dbDoc: Document): DocumentData {
+  // Smart page restoration logic:
+  // - If never read (pages_read = 0), start at page 1
+  // - If partially read, resume at last page read
+  // - Cap at total pages if available to prevent overflow
+  const currentPage = dbDoc.pages_read === 0
+    ? 1
+    : dbDoc.page_count
+      ? Math.min(dbDoc.pages_read, dbDoc.page_count)
+      : Math.max(1, dbDoc.pages_read || 1)  // Fallback when page_count is null
+
+  // Debug logging (can be removed after testing)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[PageRestore]', {
+      document: dbDoc.title,
+      pages_read: dbDoc.pages_read,
+      page_count: dbDoc.page_count,
+      calculated_currentPage: currentPage
+    })
+  }
+
   return {
     id: dbDoc.id,
     title: dbDoc.title,
@@ -17,8 +37,9 @@ export function transformDocumentForReader(dbDoc: Document): DocumentData {
     fileSize: formatFileSize(dbDoc.file_size),
     uploadDate: new Date(dbDoc.upload_date).toLocaleDateString(),
     readingProgress: dbDoc.reading_progress,
-    currentPage: dbDoc.pages_read + 1,
-    filePath: dbDoc.file_path
+    currentPage: currentPage,
+    filePath: dbDoc.file_path,
+    folderId: dbDoc.folder_id ?? null,
   }
 }
 

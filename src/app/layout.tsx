@@ -3,7 +3,8 @@ import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import { Suspense } from "react"
+import "@/lib/suppress-mui-warnings"
+import { Providers } from "./providers"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -31,12 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${playfair.variable} ${inter.variable} antialiased`}>
-        <Suspense>
+        <Providers>
           {children}
           <Analytics />
-        </Suspense>
+        </Providers>
       </body>
     </html>
   )
 }
-

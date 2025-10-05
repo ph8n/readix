@@ -43,9 +43,26 @@ export async function getDocumentForReading(documentId: string): Promise<FetchRe
     }
 
     // 3. Transform to reader format
-    const documentData = transformDocumentForReader(doc)
+    const base = transformDocumentForReader(doc)
 
-    return { success: true, data: documentData }
+    // 4. Build breadcrumbs if folder present
+    const crumbs: { id: string; name: string }[] = []
+    if (doc.folder_id) {
+      let currentId: string | null = doc.folder_id
+      type FolderRow = { id: string; name: string; parent_id: string | null }
+      while (currentId) {
+        const { data, error } = await supabase
+          .from('folders')
+          .select('id,name,parent_id')
+          .eq('id', currentId)
+          .single<FolderRow>()
+        if (error || !data) break
+        crumbs.unshift({ id: data.id, name: data.name })
+        currentId = data.parent_id
+      }
+    }
+
+    return { success: true, data: { ...base, breadcrumbs: crumbs } }
 
   } catch (error) {
     console.error('Error fetching document for reading:', error)
@@ -73,15 +90,17 @@ export async function updateReadingProgress(
       return { success: false, error: 'Authentication required' }
     }
 
-    // Calculate progress percentage
+    // Calculate progress percentage using shared helper
     const progress = totalPages > 0 ? (currentPage / totalPages) * 100 : 0
+
+    const rounded = Math.round(progress * 100) / 100
 
     // Update database
     const { error: updateError } = await supabase
       .from('documents')
       .update({
         pages_read: currentPage,
-        reading_progress: Math.round(progress * 100) / 100, // 2 decimal places
+        reading_progress: rounded,
         last_read_at: new Date().toISOString()
       })
       .eq('id', documentId)

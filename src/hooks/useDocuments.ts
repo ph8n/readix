@@ -17,6 +17,7 @@ export interface Document {
   pages_read: number
   reading_progress: number
   last_read_at: string | null
+  folder_id: string | null
 }
 
 export function useDocuments() {
@@ -69,7 +70,9 @@ export function useDocuments() {
   useEffect(() => {
     if (!currentUser) return
 
-    console.log('Setting up real-time subscription for user:', currentUser.id)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Setting up real-time subscription for user:', currentUser.id)
+    }
 
     const subscription = supabase
       .channel('user_documents')
@@ -81,25 +84,37 @@ export function useDocuments() {
           filter: `user_id=eq.${currentUser.id}`
         },
         (payload) => {
-          console.log('🔴 Real-time update received:', payload.eventType, payload.new || payload.old)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🔴 Real-time update received:', payload.eventType, payload.new || payload.old)
+          }
           
           if (payload.eventType === 'INSERT') {
             const newDoc = payload.new as Document
-            console.log('📄 Adding new document:', newDoc.title)
+            if (process.env.NODE_ENV === 'development') {
+              console.log('📄 Adding new document:', newDoc.title)
+            }
             setDocuments(prev => {
               // Avoid duplicates
               if (prev.some(doc => doc.id === newDoc.id)) {
-                console.log('⚠️ Document already exists, skipping')
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('⚠️ Document already exists, skipping')
+                }
                 return prev
               }
-              console.log('✅ Document added to state')
+              if (process.env.NODE_ENV === 'development') {
+                console.log('✅ Document added to state')
+              }
               return [newDoc, ...prev]
             })
           } else if (payload.eventType === 'DELETE') {
-            console.log('🗑️ Removing document:', payload.old?.id)
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🗑️ Removing document:', payload.old?.id)
+            }
             setDocuments(prev => prev.filter(doc => doc.id !== payload.old?.id))
           } else if (payload.eventType === 'UPDATE') {
-            console.log('📝 Updating document:', payload.new?.id)
+            if (process.env.NODE_ENV === 'development') {
+              console.log('📝 Updating document:', payload.new?.id)
+            }
             setDocuments(prev => prev.map(doc =>
               doc.id === payload.new?.id ? payload.new as Document : doc
             ))
@@ -107,11 +122,15 @@ export function useDocuments() {
         }
       )
       .subscribe((status) => {
-        console.log('📡 Subscription status:', status)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('📡 Subscription status:', status)
+        }
       })
 
     return () => {
-      console.log('🔌 Unsubscribing from real-time updates')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔌 Unsubscribing from real-time updates')
+      }
       subscription.unsubscribe()
     }
   }, [currentUser, supabase])
@@ -139,13 +158,4 @@ export function useDocuments() {
     optimisticAdd,
     setDocuments
   }
-}
-
-// Helper function to format file size
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }

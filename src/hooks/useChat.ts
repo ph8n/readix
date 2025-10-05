@@ -1,7 +1,12 @@
 "use client"
 
 import { useState, useCallback } from 'react'
-import type { ChatMessage } from '@/components/reader/sidebar/chat/types'
+type ChatMessage = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  createdAt: number
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useChat(_documentId: string) {

@@ -1,0 +1,139 @@
+/* Library Design Tokens (Phase 1)
+   Focus: neutral warm surfaces, sage accent, restrained elevation
+   Namespace: --lib-* to avoid clashes with existing global tokens.
+*/
+:root {
+  /* Palette */
+  --lib-color-bg: #fdfdfc;              /* warm paper */
+  --lib-color-surface: #fbfaf8;         /* card base */
+  --lib-color-surface-alt: #f5f3ef;     /* subtle contrast */
+  --lib-color-surface-inset: #efede8;   /* inset blocks */
+  --lib-color-border: #e3e0db;
+  --lib-color-border-strong: #cfcac2;
+  --lib-color-accent: #dfe9d9;          /* soft sage */
+  --lib-color-accent-emphasis: #c9d9c2; /* hover accent */
+  --lib-color-accent-fg: #223222;
+  --lib-color-text: #2c2c2c;            /* charcoal */
+  --lib-color-text-muted: #676c63;
+  --lib-color-focus: #97b795;           /* focus ring (AA on light) */
+  --lib-color-danger: #b0583c;
+  --lib-color-danger-bg: #f7e5e0;
+
+  /* Typography scale (rem) */
+  --lib-font-family-sans: var(--font-inter, system-ui, sans-serif);
+  --lib-font-family-serif: var(--font-playfair, Georgia, serif);
+  --lib-font-size-xs: 0.75rem;
+  --lib-font-size-sm: 0.8125rem;
+  --lib-font-size-base: 0.875rem;
+  --lib-font-size-md: 1rem;
+  --lib-font-size-lg: 1.125rem;
+  --lib-font-weight-regular: 400;
+  --lib-font-weight-medium: 500;
+  --lib-font-weight-semibold: 600;
+
+  /* Spacing scale */
+  --lib-space-1: 0.25rem;
+  --lib-space-2: 0.5rem;
+  --lib-space-3: 0.75rem;
+  --lib-space-4: 1rem;
+  --lib-space-5: 1.25rem;
+  --lib-space-6: 1.5rem;
+  --lib-space-8: 2rem;
+  --lib-space-10: 2.5rem;
+
+  /* Radii */
+  --lib-radius-xs: 4px;
+  --lib-radius-sm: 6px;
+  --lib-radius-md: 8px;
+  --lib-radius-lg: 12px;
+  --lib-radius-pill: 999px;
+
+  /* Shadows */
+  --lib-shadow-none: none;
+  --lib-shadow-low: 0 1px 2px rgba(0,0,0,0.04);
+  --lib-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --lib-shadow-md: 0 2px 6px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+  --lib-shadow-hover: 0 4px 14px rgba(0,0,0,0.08);
+  --lib-shadow-focus-ring: 0 0 0 2px var(--lib-color-bg), 0 0 0 4px var(--lib-color-focus);
+
+  /* Transitions */
+  --lib-transition-fast: 120ms ease;
+  --lib-transition-base: 200ms ease;
+  --lib-transition-slow: 320ms ease;
+}
+
+.dark {
+  --lib-color-bg: #181a19;
+  --lib-color-surface: #1e201f;
+  --lib-color-surface-alt: #242726;
+  --lib-color-surface-inset: #2a2d2b;
+  --lib-color-border: #2f3432;
+  --lib-color-border-strong: #3c4240;
+  --lib-color-accent: #374a39;
+  --lib-color-accent-emphasis: #425b45;
+  --lib-color-accent-fg: #e4efe3;
+  --lib-color-text: #f4f6f3;
+  --lib-color-text-muted: #9aa19a;
+  --lib-color-focus: #5c7d59;
+  --lib-color-danger: #cf7559;
+  --lib-color-danger-bg: #3a2620;
+  --lib-shadow-low: 0 1px 2px rgba(0,0,0,0.5);
+  --lib-shadow-sm: 0 1px 3px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.4);
+  --lib-shadow-md: 0 2px 6px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.5);
+  --lib-shadow-hover: 0 4px 14px rgba(0,0,0,0.65);
+  --lib-shadow-focus-ring: 0 0 0 2px var(--lib-color-surface), 0 0 0 4px var(--lib-color-focus);
+}
+
+/* Utility mappings (Tailwind-friendly) */
+@layer utilities {
+  .lib-bg { background: var(--lib-color-bg); }
+  .lib-surface { background: var(--lib-color-surface); }
+  .lib-surface-alt { background: var(--lib-color-surface-alt); }
+  .lib-border { border-color: var(--lib-color-border); }
+  .lib-border-strong { border-color: var(--lib-color-border-strong); }
+  .lib-text { color: var(--lib-color-text); }
+  .lib-text-muted { color: var(--lib-color-text-muted); }
+  .lib-accent-bg { background: var(--lib-color-accent); }
+  .lib-accent-bg-emphasis { background: var(--lib-color-accent-emphasis); }
+  .lib-accent-fg { color: var(--lib-color-accent-fg); }
+  .lib-shadow-low { box-shadow: var(--lib-shadow-low); }
+  .lib-shadow-sm { box-shadow: var(--lib-shadow-sm); }
+  .lib-shadow-md { box-shadow: var(--lib-shadow-md); }
+  .lib-transition { transition: var(--lib-transition-base); }
+  .lib-focus-ring:focus-visible { box-shadow: var(--lib-shadow-focus-ring); outline: none; }
+  .lib-rounded { border-radius: var(--lib-radius-md); }
+  .lib-rounded-sm { border-radius: var(--lib-radius-sm); }
+  .lib-rounded-lg { border-radius: var(--lib-radius-lg); }
+  .lib-pill { border-radius: var(--lib-radius-pill); }
+  .lib-grid-gap { gap: var(--lib-space-4); }
+  .lib-pad { padding: var(--lib-space-4); }
+  .lib-pad-sm { padding: var(--lib-space-3); }
+  .lib-pad-xs { padding: var(--lib-space-2); }
+  .lib-divider { border-bottom: 1px solid var(--lib-color-border); }
+}
+
+/* Component primitives (can be refactored later into separate files) */
+.library-card-base {
+  background: var(--lib-color-surface);
+  border: 1px solid var(--lib-color-border);
+  border-radius: var(--lib-radius-md);
+  box-shadow: var(--lib-shadow-low);
+  transition: box-shadow var(--lib-transition-base), transform var(--lib-transition-base), border-color var(--lib-transition-base), background-color var(--lib-transition-base);
+}
+.library-card-base:hover {
+  box-shadow: var(--lib-shadow-hover);
+  transform: translateY(-2px);
+  border-color: var(--lib-color-border-strong);
+}
+.library-card-base:focus-visible {
+  box-shadow: var(--lib-shadow-focus-ring);
+  outline: none;
+}
+
+/* Skeleton shimmer */
+@keyframes lib-shimmer { 0% { background-position: -400px 0 } 100% { background-position: 400px 0 } }
+.library-skeleton {
+  background: linear-gradient(90deg, var(--lib-color-surface-alt) 0px, var(--lib-color-surface-inset) 40px, var(--lib-color-surface-alt) 80px);
+  background-size: 600px 100%;
+  animation: lib-shimmer 1.4s infinite linear;
+}

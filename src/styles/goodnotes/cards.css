@@ -1,0 +1,115 @@
+/* GoodNotes Card Styling */
+
+.goodnotes-card {
+  background: var(--gn-card);
+  border: 1px solid var(--gn-border);
+  border-radius: var(--gn-radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--gn-transition-base);
+  box-shadow: var(--gn-shadow-sm);
+}
+
+/* Checkbox (hidden by default, shows on hover/selected) */
+.goodnotes-card__checkbox {
+  position: absolute;
+  top: var(--gn-spacing-md);
+  right: var(--gn-spacing-md);
+  z-index: var(--gn-z-index-dropdown);
+  opacity: 0;
+  transition: opacity var(--gn-transition-base);
+}
+
+.goodnotes-card__checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--gn-accent);
+}
+
+.goodnotes-card:hover .goodnotes-card__checkbox,
+.goodnotes-card--selected .goodnotes-card__checkbox {
+  opacity: 1;
+}
+
+/* Preview area */
+.goodnotes-card__preview {
+  aspect-ratio: 3/4;
+  background: var(--gn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--gn-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Info section */
+.goodnotes-card__info {
+  padding: var(--gn-spacing-md);
+  background: var(--gn-card);
+}
+
+.goodnotes-card__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--gn-font-family);
+  font-size: var(--gn-font-size-base);
+  font-weight: var(--gn-font-weight-medium);
+  color: var(--gn-text-primary);
+  margin-bottom: 4px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goodnotes-card__title svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--gn-icon);
+}
+
+.goodnotes-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--gn-font-family);
+  font-size: var(--gn-font-size-sm);
+  color: var(--gn-text-secondary);
+}
+
+/* Hover state */
+.goodnotes-card:hover {
+  background: var(--gn-hover-bg);
+  border-color: var(--gn-hover-border);
+  box-shadow: var(--gn-shadow-md);
+  transform: translateY(-4px);
+}
+
+/* Selected state */
+.goodnotes-card--selected {
+  background: var(--gn-selected-bg);
+  border: 2px solid var(--gn-selected-border);
+  box-shadow: var(--gn-shadow-selected);
+}
+
+/* Selected hover state */
+.goodnotes-card--selected:hover {
+  transform: translateY(-2px);
+}
+
+/* Drag state */
+.goodnotes-card--dragging {
+  opacity: 0.6;
+  transform: rotate(3deg) scale(0.95);
+}
+
+/* Focus state for accessibility */
+.goodnotes-card:focus-visible {
+  outline: 2px solid var(--gn-accent);
+  outline-offset: 2px;
+}
